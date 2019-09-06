@@ -8,7 +8,6 @@
 
 'use strict';
 
-var expect = require('chai').expect;
 var ConvertHandler = require('../controllers/convertHandler.js');
 
 module.exports = function (app) {
@@ -24,7 +23,27 @@ module.exports = function (app) {
       var returnUnit = convertHandler.getReturnUnit(initUnit);
       var toString = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
       
-      //res.json
+      if (initUnit == "invalid unit" && initNum == "invalid number") {
+        return res.json("invalid number and unit");
+      }
+      else if (initUnit == "invalid unit") {
+        return res.json(initUnit);
+      }
+      else if (initNum == "invalid number") {
+        return res.json(initNum);
+      }
+      else {
+        return res.json(
+          {
+            initNum: initNum,
+            initUnit: initUnit,
+            returnNum: returnNum,
+            returnUnit: returnUnit,
+            string: toString
+          }
+        );
+      }
+    
     });
     
 };

@@ -4,6 +4,7 @@ var express     = require('express');
 var bodyParser  = require('body-parser');
 var expect      = require('chai').expect;
 var cors        = require('cors');
+var helmet      = require('helmet');
 
 var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -33,9 +34,13 @@ apiRoutes(app);
 //404 Not Found Middleware
 app.use(function(req, res, next) {
   res.status(404)
-    .type('text')
-    .send('Not Found');
+    .sendFile(__dirname + '/views/404.html');
 });
+
+//Prevent the client from trying to guess(sniff) the MIME type
+app.use(helmet.noSniff());
+//Prevent cross-site scripting (XSS) attacks.
+app.use(helmet.xssFilter());
 
 //Start our server and tests!
 app.listen(process.env.PORT || 3000, function () {
